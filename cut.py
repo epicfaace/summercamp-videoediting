@@ -46,7 +46,7 @@ def extract_video(input_name, output_name, start_time, end_time):
 
     # .filter('trim', start=start_time, end=end_time)
     def trim(x, audio=False):
-        return x.filter('atrim' if audio else 'trim', start=start_time, end=end_time)
+        return x.filter('atrim' if audio else 'trim', start=0, end=end_time)
     
     input = ffmpeg.input(input_name, ss=start_time)
     video = trim(input.video)
