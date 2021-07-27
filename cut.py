@@ -44,7 +44,7 @@ def extract_video(input_name, output_name, start_time, end_time):
 
     # .filter('trim', start=start_time, end=end_time)
     def trim(x, audio=False):
-        return x.filter('atrim' if audio else 'trim', start=0, end=20)
+        return x.filter('atrim' if audio else 'trim', start=start_time, end=end_time)
     
     input = ffmpeg.input(input_name, ss=start_time)
     video = trim(input.video)
@@ -73,7 +73,7 @@ def get_seconds(time_str):
     return hours * 3600 + minutes * 60 + seconds
 
 def main():
-    with TextIOWrapper(urllib.request.urlopen(INPUT_VIDEOS_URL), encoding="utf-8") as csvfile:
+    with TextIOWrapper(urllib.request.urlopen(INPUT_VIDEOS_URL), encoding="utf8") as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             # {'YouTube video name': 'Prakashananda - Wk7- July 30', 'File name': '', 'Start time (HH:MM:SS)': '', 'End time (HH:MM:SS)': '', 'Name': 'Rām Rāvaṇa Yuddha'}
