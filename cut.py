@@ -15,11 +15,13 @@ https://drive.google.com/drive/folders/1ksa4G63bM_dtMHKV0rTsQZJlltrj4wiM
 """
 import csv
 import os
+from io import StringIO
 import shutil
 import urllib.request
 # from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 # from moviepy.video.io.VideoFileClip import VideoFileClip
 import ffmpeg
+import requests
 
 from io import TextIOWrapper
 
@@ -73,7 +75,8 @@ def get_seconds(time_str):
     return hours * 3600 + minutes * 60 + seconds
 
 def main():
-    with TextIOWrapper(urllib.request.urlopen(INPUT_VIDEOS_URL), encoding="utf8") as csvfile:
+    response = requests.get(INPUT_VIDEOS_URL).text
+    with StringIO(response) as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             # {'YouTube video name': 'Prakashananda - Wk7- July 30', 'File name': '', 'Start time (HH:MM:SS)': '', 'End time (HH:MM:SS)': '', 'Name': 'Rām Rāvaṇa Yuddha'}
