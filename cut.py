@@ -80,8 +80,8 @@ def main():
         reader = csv.DictReader(csvfile)
         for row in reader:
             # {'YouTube video name': 'Prakashananda - Wk7- July 30', 'File name': '', 'Start time (HH:MM:SS)': '', 'End time (HH:MM:SS)': '', 'Name': 'Rām Rāvaṇa Yuddha'}
-            if 'GMT20210618' not in row['File name']:
-                continue
+            # if 'GMT20210618' not in row['File name']:
+            #     continue
             try:
                 extract_video(row['File name'], row['YouTube video name'] + ' - ' + row['Name'], get_seconds(row['Start time (HH:MM:SS)']), get_seconds(row['End time (HH:MM:SS)']))
             except Exception as e:
