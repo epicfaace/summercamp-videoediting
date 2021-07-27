@@ -17,30 +17,54 @@ import csv
 import os
 import shutil
 import urllib.request
-from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
-from moviepy.video.io.VideoFileClip import VideoFileClip
+# from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
+# from moviepy.video.io.VideoFileClip import VideoFileClip
+import ffmpeg
 
 from io import TextIOWrapper
 
 INPUT_VIDEOS_URL = "https://docs.google.com/spreadsheet/ccc?key=1eE4wMzl2xdSYZYPV71UHvAe63d2SqPOJkAZchMESWVU&output=csv"
 OUTPUT_DIRECTORY = "output"
 
-# if os.path.exists(OUTPUT_DIRECTORY):
-#     shutil.rmtree(OUTPUT_DIRECTORY)
+if os.path.exists(OUTPUT_DIRECTORY):
+    shutil.rmtree(OUTPUT_DIRECTORY)
 os.makedirs(OUTPUT_DIRECTORY, exist_ok=True)
+
+QUIET = False
 
 def extract_video(input_name, output_name, start_time, end_time):
     if not os.path.exists(input_name):
         raise Exception(f"File {input_name} does not exist, aborting")
-    output_path_video = os.path.join(OUTPUT_DIRECTORY, output_name, ".mp4")
-    output_path_audio = os.path.join(OUTPUT_DIRECTORY, output_name, ".mp3")
+    output_path_video = os.path.join(OUTPUT_DIRECTORY, output_name + ".mp4")
+    output_path_audio = os.path.join(OUTPUT_DIRECTORY, output_name + ".mp3")
     if os.path.exists(output_path_video) and os.path.exists(output_path_audio):
         print(f"File {output_name} already exists, skipping")
         return
     print("Processing", input_name)
-    clip = VideoFileClip(input_name).subclip(start_time, end_time)
-    clip.write_videofile(output_path_video, codec="mpeg4")
-    clip.write_audiofile(output_path_audio)
+
+    # .filter('trim', start=start_time, end=end_time)
+    def trim(x, audio=False):
+        return x.filter('atrim' if audio else 'trim', start=0, end=20)
+    
+    input = ffmpeg.input(input_name, ss=start_time)
+    video = trim(input.video)
+    audio = trim(input.audio, audio=True)
+
+    ffmpeg.output(audio, video, output_path_video).run(quiet=QUIET)
+
+    ffmpeg.output(audio, output_path_audio).run(quiet=QUIET)
+    
+    # trim(ffmpeg.input(input_name, ss=start_time).audio, audio=True).output(output_path_audio).run(quiet=QUIET)
+
+    # clip = VideoFileClip(input_name).subclip(start_time, end_time).subclip(0, 20)
+    # clip.write_videofile(output_path_video, codec="mpeg4", audio=True, audio_codec="libmp3lame", temp_audiofile='temp-audio.mp3', remove_temp=True)
+    # clip.audio.write_audiofile(output_path_audio, codec="libmp3lame")
+    # # os.rename(output_path_audio_1, output_path_audio)
+    # # os.rename(output_path_video_1, output_path_video)
+    # clip.close()
+
+
+
     print(f"Finished file: {input_name}, output: {output_name}", os.path.exists(input_name))
 
 
