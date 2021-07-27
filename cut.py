@@ -26,8 +26,8 @@ from io import TextIOWrapper
 INPUT_VIDEOS_URL = "https://docs.google.com/spreadsheet/ccc?key=1eE4wMzl2xdSYZYPV71UHvAe63d2SqPOJkAZchMESWVU&output=csv"
 OUTPUT_DIRECTORY = "output"
 
-if os.path.exists(OUTPUT_DIRECTORY):
-    shutil.rmtree(OUTPUT_DIRECTORY)
+# if os.path.exists(OUTPUT_DIRECTORY):
+#     shutil.rmtree(OUTPUT_DIRECTORY)
 os.makedirs(OUTPUT_DIRECTORY, exist_ok=True)
 
 QUIET = False
