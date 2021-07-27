@@ -55,16 +55,6 @@ def extract_video(input_name, output_name, start_time, end_time):
     ffmpeg.output(audio, video, output_path_video).run(quiet=QUIET)
 
     ffmpeg.output(audio, output_path_audio).run(quiet=QUIET)
-    
-    # trim(ffmpeg.input(input_name, ss=start_time).audio, audio=True).output(output_path_audio).run(quiet=QUIET)
-
-    # clip = VideoFileClip(input_name).subclip(start_time, end_time).subclip(0, 20)
-    # clip.write_videofile(output_path_video, codec="mpeg4", audio=True, audio_codec="libmp3lame", temp_audiofile='temp-audio.mp3', remove_temp=True)
-    # clip.audio.write_audiofile(output_path_audio, codec="libmp3lame")
-    # # os.rename(output_path_audio_1, output_path_audio)
-    # # os.rename(output_path_video_1, output_path_video)
-    # clip.close()
-
 
 
     print(f"Finished file: {input_name}, output: {output_name}", os.path.exists(input_name))
